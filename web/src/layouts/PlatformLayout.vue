@@ -1,22 +1,66 @@
 <template>
   <div style="display: flex; height: 100vh;">
-    <div style="width: 200px; background: #1f2d3d;">
-      <div style="color:white; height:60px; line-height:60px; text-align:center; font-weight:bold;">🔧 平台总控</div>
+    <div class="sidebar-container" :style="{ width: sidebarWidth }">
+      <div class="logo-container">
+        <el-icon :size="32" color="#2ecc71"><ElementPlus /></el-icon>
+        <transition name="fade">
+          <span v-if="!appStore.isSidebarCollapsed" class="logo-title">SaaS 总控台</span>
+        </transition>
+      </div>
       <Sidebar />
     </div>
-    <div style="flex: 1; padding: 20px;">
-      <div style="margin-bottom:20px; text-align:right;">
-        <el-button type="danger" @click="logout">退出登录</el-button>
+    <div style="flex: 1; display: flex; flex-direction: column;">
+      <Header />
+      <div class="main-container">
+        <router-view />
       </div>
-      <router-view />
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import { computed } from 'vue'
 import Sidebar from './components/Sidebar/index.vue'
-import { useUserStore } from '@/stores/user'
-import { useRouter } from 'vue-router'
-const userStore = useUserStore()
-const router = useRouter()
-const logout = () => { userStore.logout(); router.push('/login') }
+import Header from './components/Header/index.vue'
+import { useAppStore } from '@/stores/app'
+
+const appStore = useAppStore()
+const sidebarWidth = computed(() => appStore.isSidebarCollapsed ? '65px' : '210px')
 </script>
+<style scoped>
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  background: #2a384a;
+  box-shadow: 2px 0 6px rgba(0, 21, 41, 0.35);
+  z-index: 10;
+  transition: width 0.3s ease;
+  overflow-x: hidden;
+}
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 60px;
+  flex-shrink: 0;
+}
+.logo-title {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  white-space: nowrap;
+}
+.main-container {
+  padding: 20px;
+  background: #f0f2f5;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>
