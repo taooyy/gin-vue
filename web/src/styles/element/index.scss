@@ -1,0 +1,26 @@
+// 文件路径: web/src/styles/element/index.scss
+
+// 这是一个关键文件，用于深度自定义 Element Plus 主题。
+// Element Plus 的样式系统基于 SCSS 的 @forward 和 @use 规则。
+
+// --- 如何使用 ---
+// 1. 解除下面这行注释，以便能够访问 Element Plus 的所有 mixin 和 variable。
+//    @forward "element-plus/theme-chalk/src/mixins/config.scss";
+
+// 2. 在这里覆盖 Element Plus 的样式变量。
+//    例如，要改变主题色，可以解除下面的注释：
+/*
+@use "element-plus/theme-chalk/src/common/var.scss" with (
+  $colors: (
+    'primary': (
+      // 将基础主色改为一个鲜绿色
+      'base': #2ecc71,
+    ),
+    'success': (
+      'base': #409EFF,
+    )
+  )
+);
+*/
+
+// 注意：此文件仅用于定义变量覆盖和转发 mixin，不应包含任何会直接生成 CSS 的代码。

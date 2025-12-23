@@ -1,0 +1,14 @@
+// 1. 引入自定义的 Element Plus 变量覆盖文件
+// 即使此文件为空，也需要引入，因为它可能在未来用于主题定制。
+@use "element/index.scss";
+
+// 2. 引入 Element Plus 的主 SCSS 文件
+// 这是实现主题化的核心步骤。
+@use "element-plus/theme-chalk/src/index.scss" as ep;
+
+// 3. 放置您自己的全局样式
+body { 
+  margin: 0; 
+  padding: 0; 
+  font-family: sans-serif; 
+}

@@ -23,7 +23,7 @@ import { useRoute } from 'vue-router'
 import { usePermissionStore } from '@/stores/permission'
 import { useAppStore } from '@/stores/app'
 import SidebarItem from './SidebarItem.vue'
-import type { MenuItem } from '@/config/types';
+import type { MenuItem } from '@/types/config'
 
 const route = useRoute()
 const permissionStore = usePermissionStore()

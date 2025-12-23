@@ -17,6 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import type { MenuItem } from '@/config/types'
+import type { MenuItem } from '@/types/config'
 defineProps<{ item: MenuItem }>()
 </script>

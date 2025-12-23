@@ -39,33 +39,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
-import { usePermissionStore } from '@/stores/permission'
+import { useAuth } from '@/composables/useAuth'
 
-const router = useRouter()
-const userStore = useUserStore()
-const permissionStore = usePermissionStore()
-const selectedRole = ref('school_admin')
-
-const handleLogin = () => {
-  // 模拟后端返回
-  const mockOrgType = selectedRole.value === 'platform_admin' ? 1 : 2
-  const mockToken = 'token-' + Date.now()
-
-  // 1. 存状态
-  userStore.setLoginState(mockToken, selectedRole.value, mockOrgType)
-
-  // 2. 核心逻辑：分流 + 生成菜单
-  if (mockOrgType === 1) {
-    permissionStore.generateMenus(selectedRole.value, 'platform')
-    router.push('/platform/dashboard')
-  } else {
-    permissionStore.generateMenus(selectedRole.value, 'tenant')
-    router.push('/workspace/dashboard')
-  }
-}
+const { selectedRole, handleLogin } = useAuth()
 </script>
 
 <style scoped>

@@ -1,0 +1,10 @@
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  user: "root"
+  password: "123456" # 请替换为您的MySQL密码
+  dbname: "school_scm"
+  config: "charset=utf8mb4&parseTime=True&loc=Local"
+
+server:
+  port: 8080

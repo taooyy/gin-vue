@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { MenuItem } from '@/config/types'
+import type { MenuItem } from '@/types/config'
 import router from '@/router'
 import type { RouteRecordRaw } from 'vue-router'
 import path from 'path-browserify'
@@ -48,7 +48,7 @@ function buildMenusFromRoutes(routes: readonly RouteRecordRaw[], role: string, b
       }
       
       // 如果一个菜单项没有任何有权限的子菜单，那它自身也不应该显示（除非它本身就是个页面）
-      if (menuItem.children.length === 0 && !route.component) {
+      if (menuItem.children && menuItem.children.length === 0 && !route.component) {
         continue
       }
       // 如果只有一个子菜单，有些UI设计会选择直接提升子菜单，这里我们保持结构

@@ -9,9 +9,14 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      // 这里配置了 @ 指向 src 目录，解决 "找不到模块" 的核心配置
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // additionalData: `@use "@/styles/variables.scss" as *;`
+      }
+    }
   }
-  // 我把 css 配置块删掉了，这样就不会报错了
 })

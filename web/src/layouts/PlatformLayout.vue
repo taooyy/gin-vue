@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; height: 100vh;">
+  <div class="platform-layout">
     <div class="sidebar-container" :style="{ width: sidebarWidth }">
       <div class="logo-container">
         <el-icon :size="32" color="#2ecc71"><ElementPlus /></el-icon>
@@ -9,7 +9,7 @@
       </div>
       <Sidebar />
     </div>
-    <div style="flex: 1; display: flex; flex-direction: column;">
+    <div class="content-wrapper">
       <Header />
       <div class="main-container">
         <router-view />
@@ -27,6 +27,17 @@ const appStore = useAppStore()
 const sidebarWidth = computed(() => appStore.isSidebarCollapsed ? '65px' : '210px')
 </script>
 <style scoped>
+.platform-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .sidebar-container {
   display: flex;
   flex-direction: column;
