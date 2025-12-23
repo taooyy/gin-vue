@@ -17,16 +17,17 @@
         <p class="login-subtitle">请选择您的角色以继续</p>
         <el-form label-position="top" class="login-form">
           <el-form-item label="用户名">
-             <el-input placeholder="（模拟登录无需输入）" prefix-icon="User" disabled />
+             <el-input v-model="username" placeholder="请输入用户名（角色名）" prefix-icon="User" />
           </el-form-item>
            <el-form-item label="密码">
-             <el-input placeholder="（模拟登录无需输入）" type="password" prefix-icon="Lock" disabled />
+             <el-input v-model="password" type="password" placeholder="请输入密码" prefix-icon="Lock" show-password />
           </el-form-item>
-          <el-form-item label="模拟角色切换">
-            <el-select v-model="selectedRole" placeholder="选择模拟登录的角色" style="width:100%">
+          <el-form-item label="登录角色">
+            <el-select v-model="selectedRole" placeholder="选择登录的角色" style="width:100%">
               <el-option label="平台管理员" value="platform_admin" />
               <el-option label="学校管理员" value="school_admin" />
               <el-option label="供应商" value="supplier" />
+              <el-option label="食堂管理员" value="canteen_admin" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -41,7 +42,7 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth'
 
-const { selectedRole, handleLogin } = useAuth()
+const { username, password, selectedRole, handleLogin } = useAuth()
 </script>
 
 <style scoped>

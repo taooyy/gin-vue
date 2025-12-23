@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gin-vue/server/internal/config"
-	"gin-vue/server/internal/router"
-	"gin-vue/server/pkg/database"
+	"server/internal/config"
+	"server/internal/router"
+	"server/pkg/database"
 )
 
 func main() {
@@ -16,7 +16,11 @@ func main() {
 	if err := database.InitMySQL(); err != nil {
 		panic(err)
 	}
-	fmt.Println("✅ 数据库连接成功")
+	// 执行数据迁移
+	if err := database.Migrate(); err != nil {
+		panic(fmt.Sprintf("数据迁移失败: %s", err))
+	}
+	fmt.Println("✅ 数据迁移成功")
 
 	// 如果程序退出，延迟关闭数据库连接
 	sqlDB, err := database.DB.DB()

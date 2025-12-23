@@ -8,3 +8,8 @@ mysql:
 
 server:
   port: 8080
+
+jwt:
+  issuer: "gin-vue"
+  secret: "a-secure-secret-key-that-is-long-enough" # 强烈建议从环境变量或更安全的地方加载
+  expire: 24 # token过期时间，单位：小时

@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+
 	"github.com/spf13/viper"
 )
 
@@ -11,6 +12,7 @@ var Cfg AppConfig
 type AppConfig struct {
 	MySQL  MySQLConfig  `mapstructure:"mysql"`
 	Server ServerConfig `mapstructure:"server"`
+	Jwt    JwtConfig    `mapstructure:"jwt"`
 }
 
 type MySQLConfig struct {
@@ -30,6 +32,12 @@ func (m *MySQLConfig) Dsn() string {
 
 type ServerConfig struct {
 	Port int `mapstructure:"port"`
+}
+
+type JwtConfig struct {
+	Issuer string `mapstructure:"issuer"`
+	Secret string `mapstructure:"secret"`
+	Expire int    `mapstructure:"expire"`
 }
 
 // Init 初始化配置

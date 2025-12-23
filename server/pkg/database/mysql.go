@@ -2,9 +2,10 @@ package database
 
 import (
 	"fmt"
-	"gin-vue/server/internal/config"
 	"log"
 	"os"
+	"server/internal/config"
+	"server/internal/model" // 导入所有模型的包
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -40,5 +41,47 @@ func InitMySQL() (err error) {
 	}
 
 	fmt.Println("数据库连接成功!")
+	fmt.Println("🚀 即将开始数据迁移...")
+	return nil
+}
+
+// Migrate 执行数据迁移
+func Migrate() error {
+	// 检查核心表是否存在，如果存在则跳过迁移
+	if DB.Migrator().HasTable(&model.SysUser{}) {
+		fmt.Println("数据库表已存在，跳过迁移。")
+		return nil
+	}
+
+	fmt.Println("正在进行首次数据迁移...")
+	err := DB.AutoMigrate(
+		// System models
+		&model.SysOrganization{},
+		&model.SysUser{},
+		&model.SysDictionary{},
+		&model.SysOpLog{},
+		&model.SysBanner{},
+
+		// SCM models
+		&model.ScmCategory{},
+		&model.ScmProduct{},
+		&model.ScmProductQuote{},
+		&model.ScmSupplierStaff{},
+
+		// Order models
+		&model.OrdCart{},
+		&model.OrdOrder{},
+		&model.OrdOrderItem{},
+		&model.OrdAfterSale{},
+		&model.OrdItemTrace{},
+
+		// Finance models
+		&model.FinBill{},
+		&model.FinStatement{},
+	)
+	if err != nil {
+		return err
+	}
+	fmt.Println("✅ 首次数据迁移成功！")
 	return nil
 }
