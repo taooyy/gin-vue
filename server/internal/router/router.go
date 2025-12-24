@@ -33,7 +33,7 @@ func Init() *gin.Engine {
 	// --- 依赖注入 ---
 	userRepo := repository.NewUserRepository(database.DB)
 	roleRepo := repository.NewRoleRepository(database.DB)
-	
+
 	authService := service.NewAuthService(userRepo, roleRepo)
 	accountService := service.NewAccountService(userRepo, roleRepo)
 
@@ -48,7 +48,7 @@ func Init() *gin.Engine {
 		{
 			sysGroup.POST("/login", authHandler.Login)
 		}
-		
+
 		// 账号管理路由，需要认证和授权
 		accountGroup := apiGroup.Group("/accounts")
 		accountGroup.Use(middleware.AuthMiddleware(), middleware.CanCreateUsers(roleRepo))
@@ -57,6 +57,8 @@ func Init() *gin.Engine {
 			accountGroup.GET("", accountHandler.ListAccounts)
 			accountGroup.PUT("/:id/status", accountHandler.UpdateAccountStatus)
 			accountGroup.DELETE("/:id", accountHandler.DeleteAccount)
+			accountGroup.PUT("/:id", accountHandler.UpdateAccount)
+			accountGroup.PUT("/:id/password", accountHandler.ResetPassword)
 		}
 
 		// 其他受保护的路由组
@@ -82,4 +84,3 @@ func Init() *gin.Engine {
 
 	return r
 }
-

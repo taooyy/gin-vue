@@ -39,7 +39,7 @@ apiClient.interceptors.response.use(
       ElMessage.error('网络错误，请检查您的连接');
       return Promise.reject(error);
     }
-    
+
     // 处理后端返回的错误
     const { status, data } = error.response;
     let message = `请求失败，状态码：${status}`;
@@ -49,14 +49,14 @@ apiClient.interceptors.response.use(
 
     // 特殊处理 401 Unauthorized
     if (status === 401) {
-        message = '认证失败或 Token 已过期，请重新登录';
-        // 在这里可以触发登出逻辑
-        const userStore = useUserStore();
-        userStore.logout();
+      message = '认证失败或 Token 已过期，请重新登录';
+      // 在这里可以触发登出逻辑
+      const userStore = useUserStore();
+      userStore.logout();
     }
-    
+
     ElMessage.error(message);
-    
+
     return Promise.reject(error);
   }
 );

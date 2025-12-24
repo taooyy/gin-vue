@@ -17,12 +17,17 @@ export const useUserStore = defineStore('user', () => {
    * @param newType 新的组织类型
    * @param newUserInfo 新的用户信息
    */
-  function setLoginState(newToken: string, newRole: string, newType: number, newUserInfo: UserInfo) {
+  function setLoginState(
+    newToken: string,
+    newRole: string,
+    newType: number,
+    newUserInfo: UserInfo
+  ) {
     token.value = newToken;
     role.value = newRole;
     orgType.value = newType;
     userInfo.value = newUserInfo;
-    
+
     sessionStorage.setItem('token', newToken);
     sessionStorage.setItem('role', newRole);
     sessionStorage.setItem('orgType', String(newType));

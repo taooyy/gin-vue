@@ -23,7 +23,6 @@ export interface ListAccountsResponse {
   pageSize: number;
 }
 
-
 /**
  * @description 调用后端接口创建子账号
  * @param data 包含新账号信息的载荷
@@ -55,7 +54,7 @@ export interface UpdateAccountStatusPayload {
  */
 export const updateAccountStatusApi = (id: number, payload: UpdateAccountStatusPayload) => {
   return apiClient.put(`/accounts/${id}/status`, payload);
-}
+};
 
 /**
  * @description 调用后端接口删除子账号
@@ -64,4 +63,35 @@ export const updateAccountStatusApi = (id: number, payload: UpdateAccountStatusP
  */
 export const deleteAccountApi = (id: number) => {
   return apiClient.delete(`/accounts/${id}`);
+};
+
+// 定义更新账号基本信息时发送到后端的数据类型
+export interface UpdateAccountPayload {
+  realName: string;
+  mobile?: string;
+}
+
+/**
+ * @description 调用后端接口更新子账号基本信息
+ * @param id 账号ID
+ * @param payload 包含要更新的信息的载荷
+ * @returns Promise
+ */
+export const updateAccountApi = (id: number, payload: UpdateAccountPayload) => {
+  return apiClient.put(`/accounts/${id}`, payload);
+};
+
+// 定义重置密码时发送到后端的数据类型
+export interface ResetPasswordPayload {
+  password: string;
+}
+
+/**
+ * @description 调用后端接口重置子账号密码
+ * @param id 账号ID
+ * @param payload 包含新密码的载荷
+ * @returns Promise
+ */
+export const resetPasswordApi = (id: number, payload: ResetPasswordPayload) => {
+  return apiClient.put(`/accounts/${id}/password`, payload);
 };

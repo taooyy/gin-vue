@@ -3,8 +3,13 @@
     <div class="login-left">
       <div class="brand-wrapper">
         <div class="brand-logo">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="logo-svg">
-            <path d="M12 2L1 9l4 2.5V17h14v-5.5L23 9zM12 4.5l7 4.37V15H5V8.87zM7 18v-5h10v5z"/>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="logo-svg"
+          >
+            <path d="M12 2L1 9l4 2.5V17h14v-5.5L23 9zM12 4.5l7 4.37V15H5V8.87zM7 18v-5h10v5z" />
           </svg>
         </div>
         <h1 class="brand-title">SaaS Supply Chain</h1>
@@ -17,10 +22,16 @@
         <p class="login-subtitle">请输入您的凭证</p>
         <el-form label-position="top" class="login-form" @submit.prevent="handleLogin">
           <el-form-item label="用户名">
-             <el-input v-model="username" placeholder="请输入用户名" prefix-icon="User" />
+            <el-input v-model="username" placeholder="请输入用户名" prefix-icon="User" />
           </el-form-item>
-           <el-form-item label="密码">
-             <el-input v-model="password" type="password" placeholder="请输入密码" prefix-icon="Lock" show-password />
+          <el-form-item label="密码">
+            <el-input
+              v-model="password"
+              type="password"
+              placeholder="请输入密码"
+              prefix-icon="Lock"
+              show-password
+            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" class="login-button" native-type="submit">登 录</el-button>
@@ -32,97 +43,97 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth } from '@/composables/useAuth'
+  import { useAuth } from '@/composables/useAuth';
 
-const { username, password, handleLogin } = useAuth()
+  const { username, password, handleLogin } = useAuth();
 </script>
 
 <style scoped>
-.login-container {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-}
+  .login-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
 
-.login-left {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #409EFF, #67C23A);
-  color: white;
-  padding: 40px;
-  text-align: center;
-}
+  .login-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #409eff, #67c23a);
+    color: white;
+    padding: 40px;
+    text-align: center;
+  }
 
-.brand-wrapper {
-  max-width: 450px;
-}
+  .brand-wrapper {
+    max-width: 450px;
+  }
 
-.brand-logo {
-  margin-bottom: 20px;
-}
+  .brand-logo {
+    margin-bottom: 20px;
+  }
 
-.logo-svg {
-  width: 80px;
-  height: 80px;
-}
+  .logo-svg {
+    width: 80px;
+    height: 80px;
+  }
 
-.brand-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin: 0 0 10px;
-}
+  .brand-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0 0 10px;
+  }
 
-.brand-subtitle {
-  font-size: 1.2rem;
-  opacity: 0.9;
-}
+  .brand-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
 
-.login-right {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f5f7fa;
-}
+  .login-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f7fa;
+  }
 
-.login-box {
-  width: 400px;
-  padding: 30px;
-  border: none;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  border-radius: 10px;
-}
+  .login-box {
+    width: 400px;
+    padding: 30px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
 
-.login-title {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #333;
-  text-align: center;
-  margin-bottom: 10px;
-}
+  .login-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+  }
 
-.login-subtitle {
-  text-align: center;
-  color: #999;
-  margin-bottom: 30px;
-}
+  .login-subtitle {
+    text-align: center;
+    color: #999;
+    margin-bottom: 30px;
+  }
 
-.login-form {
-  margin-top: 20px;
-}
+  .login-form {
+    margin-top: 20px;
+  }
 
-.login-button {
-  width: 100%;
-  height: 40px;
-  font-size: 1rem;
-}
+  .login-button {
+    width: 100%;
+    height: 40px;
+    font-size: 1rem;
+  }
 
-:deep(.el-form-item__label) {
-  color: #666;
-  font-weight: 500;
-}
+  :deep(.el-form-item__label) {
+    color: #666;
+    font-weight: 500;
+  }
 </style>

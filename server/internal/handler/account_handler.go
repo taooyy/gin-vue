@@ -212,3 +212,103 @@ func (h *AccountHandler) DeleteAccount(c *gin.Context) {
 	// 4. 返回成功响应
 	c.JSON(http.StatusOK, gin.H{"message": "账号删除成功"})
 }
+
+// UpdateAccount godoc
+// @Summary 更新子账号基本信息
+// @Description 更新一个由当前用户创建的子账号的基本信息
+// @Tags Accounts
+// @Accept json
+// @Produce json
+// @Param id path int true "账号ID"
+// @Param account body model.UpdateAccountRequest true "要更新的账号信息"
+// @Success 200 {object} object "{"message":"账号更新成功"}"
+// @Failure 400 {object} object "{"error":"请求参数错误"}"
+// @Failure 403 {object} object "{"error":"无权限操作"}"
+// @Failure 500 {object} object "{"error":"内部服务器错误"}"
+// @Router /api/v1/accounts/{id} [put]
+func (h *AccountHandler) UpdateAccount(c *gin.Context) {
+	// 1. 解析路径参数 ID
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的用户ID"})
+		return
+	}
+
+	// 2. 绑定请求体
+	var req model.UpdateAccountRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "请求参数错误: " + err.Error()})
+		return
+	}
+
+	// 3. 从 Gin Context 获取用户信息
+	claims, exists := c.Get(middleware.ContextUserClaimsKey)
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"error": "无法获取用户信息，禁止访问"})
+		return
+	}
+	actorClaims, ok := claims.(*jwt.CustomClaims)
+	if !ok {
+		c.JSON(http.StatusForbidden, gin.H{"error": "用户信息格式错误，禁止访问"})
+		return
+	}
+
+	// 4. 调用 Service 层
+	if err := h.svc.UpdateAccount(uint(id), &req, actorClaims); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 5. 返回成功响应
+	c.JSON(http.StatusOK, gin.H{"message": "账号更新成功"})
+}
+
+// ResetPassword godoc
+// @Summary 重置子账号密码
+// @Description 重置一个由当前用户创建的子账号的密码
+// @Tags Accounts
+// @Accept json
+// @Produce json
+// @Param id path int true "账号ID"
+// @Param password body model.ResetPasswordRequest true "新密码"
+// @Success 200 {object} object "{"message":"密码重置成功"}"
+// @Failure 400 {object} object "{"error":"请求参数错误"}"
+// @Failure 403 {object} object "{"error":"无权限操作"}"
+// @Failure 500 {object} object "{"error":"内部服务器错误"}"
+// @Router /api/v1/accounts/{id}/password [put]
+func (h *AccountHandler) ResetPassword(c *gin.Context) {
+	// 1. 解析路径参数 ID
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的用户ID"})
+		return
+	}
+
+	// 2. 绑定请求体
+	var req model.ResetPasswordRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "请求参数错误: " + err.Error()})
+		return
+	}
+
+	// 3. 从 Gin Context 获取用户信息
+	claims, exists := c.Get(middleware.ContextUserClaimsKey)
+	if !exists {
+		c.JSON(http.StatusForbidden, gin.H{"error": "无法获取用户信息，禁止访问"})
+		return
+	}
+	actorClaims, ok := claims.(*jwt.CustomClaims)
+	if !ok {
+		c.JSON(http.StatusForbidden, gin.H{"error": "用户信息格式错误，禁止访问"})
+		return
+	}
+
+	// 4. 调用 Service 层
+	if err := h.svc.ResetPassword(uint(id), &req, actorClaims); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 5. 返回成功响应
+	c.JSON(http.StatusOK, gin.H{"message": "密码重置成功"})
+}

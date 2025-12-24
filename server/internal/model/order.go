@@ -36,15 +36,15 @@ func (OrdOrder) TableName() string {
 
 // OrdOrderItem 订单明细 - 交易快照
 type OrdOrderItem struct {
-	ID         uint    `gorm:"primarykey"`
-	OrderID    uint    `gorm:"not null;index;comment:订单ID"`
-	ProductID  uint    `gorm:"not null;comment:商品ID"`
-	QuoteID    uint    `gorm:"not null;comment:报价ID"`
-	SnapName   string  `gorm:"type:varchar(100);not null;comment:快照:品名"`
-	SnapSpecs  string  `gorm:"type:varchar(100);not null;comment:快照:规格"`
-	SnapPrice  float64 `gorm:"type:decimal(10,2);not null;comment:快照:单价"`
-	Quantity   int     `gorm:"not null;comment:数量"`
-	Amount     float64 `gorm:"type:decimal(12,2);not null;comment:该项总价"`
+	ID        uint    `gorm:"primarykey"`
+	OrderID   uint    `gorm:"not null;index;comment:订单ID"`
+	ProductID uint    `gorm:"not null;comment:商品ID"`
+	QuoteID   uint    `gorm:"not null;comment:报价ID"`
+	SnapName  string  `gorm:"type:varchar(100);not null;comment:快照:品名"`
+	SnapSpecs string  `gorm:"type:varchar(100);not null;comment:快照:规格"`
+	SnapPrice float64 `gorm:"type:decimal(10,2);not null;comment:快照:单价"`
+	Quantity  int     `gorm:"not null;comment:数量"`
+	Amount    float64 `gorm:"type:decimal(12,2);not null;comment:该项总价"`
 }
 
 func (OrdOrderItem) TableName() string {
@@ -67,16 +67,16 @@ func (OrdAfterSale) TableName() string {
 
 // OrdItemTrace 全链路溯源表
 type OrdItemTrace struct {
-	ID            uint      `gorm:"primarykey"`
-	OrderItemID   uint      `gorm:"not null;unique;comment:明细ID"`
-	TraceCode     string    `gorm:"type:varchar(64);not null;unique;comment:溯源码"`
-	MerchantInfo  string    `gorm:"type:json;comment:商户快照"`
-	SupplierInfo  string    `gorm:"type:json;comment:供应商快照"`
-	CertSnapshot  string    `gorm:"type:json;comment:证书快照"`
-	TimeLine      string    `gorm:"type:json;comment:时间轴"`
-	DriverID      uint      `gorm:"default:0;comment:司机"`
-	QcCertImage   string    `gorm:"type:varchar(255);comment:实物检测图"`
-	CreatedAt     time.Time `gorm:"autoCreateTime"`
+	ID           uint      `gorm:"primarykey"`
+	OrderItemID  uint      `gorm:"not null;unique;comment:明细ID"`
+	TraceCode    string    `gorm:"type:varchar(64);not null;unique;comment:溯源码"`
+	MerchantInfo string    `gorm:"type:json;comment:商户快照"`
+	SupplierInfo string    `gorm:"type:json;comment:供应商快照"`
+	CertSnapshot string    `gorm:"type:json;comment:证书快照"`
+	TimeLine     string    `gorm:"type:json;comment:时间轴"`
+	DriverID     uint      `gorm:"default:0;comment:司机"`
+	QcCertImage  string    `gorm:"type:varchar(255);comment:实物检测图"`
+	CreatedAt    time.Time `gorm:"autoCreateTime"`
 }
 
 func (OrdItemTrace) TableName() string {

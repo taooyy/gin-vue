@@ -6,11 +6,11 @@ import (
 
 // ScmCategory 商品分类表
 type ScmCategory struct {
-	ID        uint   `gorm:"primarykey"`
-	Name      string `gorm:"type:varchar(50);not null;comment:分类名"`
-	ParentID  uint   `gorm:"not null;default:0"`
-	Icon      string `gorm:"type:varchar(255);comment:图标"`
-	Sort      int    `gorm:"not null;default:0"`
+	ID       uint   `gorm:"primarykey"`
+	Name     string `gorm:"type:varchar(50);not null;comment:分类名"`
+	ParentID uint   `gorm:"not null;default:0"`
+	Icon     string `gorm:"type:varchar(255);comment:图标"`
+	Sort     int    `gorm:"not null;default:0"`
 }
 
 func (ScmCategory) TableName() string {
@@ -55,12 +55,12 @@ func (ScmProductQuote) TableName() string {
 
 // ScmSupplierStaff 供应商员工表
 type ScmSupplierStaff struct {
-	ID          uint   `gorm:"primarykey"`
-	SupplierID  uint   `gorm:"not null;comment:所属供应商"`
-	Name        string `gorm:"type:varchar(50);not null;comment:姓名"`
-	Mobile      string `gorm:"type:varchar(20);not null"`
-	RoleType    int8   `gorm:"not null;comment:1:司机 2:分拣"`
-	HealthCert  string `gorm:"type:varchar(255);comment:健康证图"`
+	ID         uint   `gorm:"primarykey"`
+	SupplierID uint   `gorm:"not null;comment:所属供应商"`
+	Name       string `gorm:"type:varchar(50);not null;comment:姓名"`
+	Mobile     string `gorm:"type:varchar(20);not null"`
+	RoleType   int8   `gorm:"not null;comment:1:司机 2:分拣"`
+	HealthCert string `gorm:"type:varchar(255);comment:健康证图"`
 }
 
 func (ScmSupplierStaff) TableName() string {

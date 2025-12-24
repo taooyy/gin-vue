@@ -25,6 +25,8 @@ type IAccountService interface {
 	ListAccounts(creatorClaims *jwt.CustomClaims, page int, pageSize int) ([]model.SysUser, int64, error)
 	UpdateAccountStatus(id uint, status int8, actorClaims *jwt.CustomClaims) error
 	DeleteAccount(id uint, actorClaims *jwt.CustomClaims) error
+	UpdateAccount(id uint, req *model.UpdateAccountRequest, actorClaims *jwt.CustomClaims) error
+	ResetPassword(id uint, req *model.ResetPasswordRequest, actorClaims *jwt.CustomClaims) error
 }
 
 // accountService 实现了 IAccountService 接口
@@ -131,4 +133,51 @@ func (s *accountService) DeleteAccount(id uint, actorClaims *jwt.CustomClaims) e
 
 	// 3. 执行删除
 	return s.userRepo.DeleteUserByID(id)
+}
+
+// UpdateAccount 更新用户基本信息
+func (s *accountService) UpdateAccount(id uint, req *model.UpdateAccountRequest, actorClaims *jwt.CustomClaims) error {
+	// 1. 获取要更新的用户
+	user, err := s.userRepo.GetUserByID(id)
+	if err != nil {
+		return errors.New("用户不存在")
+	}
+
+	// 2. 权限检查：确保操作者是该用户的创建者
+	if user.CreatedBy != actorClaims.UserID {
+		return errors.New("无权操作此账号")
+	}
+
+	// 3. 更新字段
+	user.RealName = req.RealName
+	user.Mobile = req.Mobile
+
+	// 4. 保存到数据库
+	return s.userRepo.UpdateUser(user)
+}
+
+// ResetPassword 重置用户密码
+func (s *accountService) ResetPassword(id uint, req *model.ResetPasswordRequest, actorClaims *jwt.CustomClaims) error {
+	// 1. 获取要更新的用户
+	user, err := s.userRepo.GetUserByID(id)
+	if err != nil {
+		return errors.New("用户不存在")
+	}
+
+	// 2. 权限检查：确保操作者是该用户的创建者
+	if user.CreatedBy != actorClaims.UserID {
+		return errors.New("无权操作此账号")
+	}
+
+	// 3. 哈希新密码
+	hashedPassword, err := password.Hash(req.Password)
+	if err != nil {
+		return errors.New("新密码加密失败")
+	}
+
+	// 4. 更新密码
+	user.Password = hashedPassword
+
+	// 5. 保存到数据库
+	return s.userRepo.UpdateUser(user)
 }

@@ -3,13 +3,13 @@ export const ROLES = {
   SCHOOL: 'school_admin',
   SUPPLIER: 'supplier',
   CANTEEN: 'canteen_admin',
-  ROOT: 'root'
-}
+  ROOT: 'root',
+};
 
 export interface MenuItem {
-  path: string
-  title: string
-  icon?: string
-  roles?: string[]
-  children?: MenuItem[]
+  path: string;
+  title: string;
+  icon?: string;
+  roles?: string[];
+  children?: MenuItem[];
 }

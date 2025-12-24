@@ -10,3 +10,14 @@ type CreateAccountRequest struct {
 	// 注意：新用户的 OrgID 和 RoleID 将由后端服务根据创建者的身份自动确定，
 	// 而不是由前端传递，以确保安全。
 }
+
+// UpdateAccountRequest 定义了更新账号时，handler 层接收的前端请求体
+type UpdateAccountRequest struct {
+	RealName string `json:"realName" binding:"required"`
+	Mobile   string `json:"mobile"`
+}
+
+// ResetPasswordRequest 定义了重置密码的请求体
+type ResetPasswordRequest struct {
+	Password string `json:"password" binding:"required,min=6"`
+}

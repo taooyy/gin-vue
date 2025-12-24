@@ -23,7 +23,7 @@ export function useAuth() {
   const handleLogin = async () => {
     try {
       const loginData = {
-        username: username.value, 
+        username: username.value,
         password: password.value,
       };
 
@@ -43,15 +43,16 @@ export function useAuth() {
 
       // 2. 根据角色信息生成菜单并跳转
       // 注意：这里仍然可以根据角色分流，但更健壮的逻辑已在 router.beforeEach 中处理
-      if (user_info.role.startsWith('platform')) { // 平台侧
+      if (user_info.role.startsWith('platform')) {
+        // 平台侧
         permissionStore.generateMenus(user_info.role, 'platform');
         router.push('/platform/dashboard');
-      } else { // 租户侧
+      } else {
+        // 租户侧
         permissionStore.generateMenus(user_info.role, 'tenant');
         router.push('/workspace/dashboard');
       }
-       ElMessage.success('登录成功！');
-
+      ElMessage.success('登录成功！');
     } catch (error) {
       console.error('登录失败:', error);
       // API 拦截器中已经处理了错误消息提示，这里可以不用重复提示

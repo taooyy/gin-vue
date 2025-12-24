@@ -146,7 +146,7 @@ func seedUsers(db *gorm.DB) error {
 	if result.Error != nil {
 		return result.Error
 	}
-	
+
 	if result.RowsAffected > 0 {
 		fmt.Println("✅ 初始用户 [platform_admin] 创建成功！")
 	} else {

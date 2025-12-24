@@ -6,13 +6,13 @@
 
 ## 1. 技术栈 (Technology Stack)
 
-*   **框架**: Vue 3 (Composition API, Script Setup)
-*   **语言**: TypeScript 5.x
-*   **UI 组件库**: Element Plus
-*   **状态管理**: Pinia
-*   **构建工具**: Vite
-*   **路由**: Vue Router 4.x
-*   **样式预处理器**: SCSS
+- **框架**: Vue 3 (Composition API, Script Setup)
+- **语言**: TypeScript 5.x
+- **UI 组件库**: Element Plus
+- **状态管理**: Pinia
+- **构建工具**: Vite
+- **路由**: Vue Router 4.x
+- **样式预处理器**: SCSS
 
 ---
 
@@ -66,12 +66,12 @@ web/
 
 在项目目录下，你可以运行以下命令：
 
-*   **`npm run dev`**:
-    在开发模式下运行应用。在浏览器中打开 `http://localhost:5173` (或其他Vite分配的端口) 查看。热重载功能将被启用。
-*   **`npm run build`**:
-    为生产环境构建应用。构建产物将输出到 `dist/` 目录。
-*   **`npm run preview`**:
-    在本地预览生产构建的应用。这不会启动一个完整的服务器，只是用 Vite 提供的简单服务器来预览 `dist/` 目录的内容。
+- **`npm run dev`**:
+  在开发模式下运行应用。在浏览器中打开 `http://localhost:5173` (或其他Vite分配的端口) 查看。热重载功能将被启用。
+- **`npm run build`**:
+  为生产环境构建应用。构建产物将输出到 `dist/` 目录。
+- **`npm run preview`**:
+  在本地预览生产构建的应用。这不会启动一个完整的服务器，只是用 Vite 提供的简单服务器来预览 `dist/` 目录的内容。
 
 ---
 
@@ -79,11 +79,11 @@ web/
 
 本项目严格遵循 `../GEMINI.md` 中定义的全栈开发规范。请特别注意以下前端相关原则：
 
-*   **UI 组件使用**: 优先使用 Element Plus。所有自定义样式和主题配置应在 `styles/element/` 或 `assets/scss` 中进行。
-*   **代码组织**: 复杂的业务逻辑应提取为独立的 Composable (`use*.ts`)。`.vue` 文件应专注于视图渲染。
-*   **类型安全**: 必须使用 TypeScript 接口或类型定义。API 响应数据的类型定义应放在 `types/api/` 目录下。
-*   **状态管理**: 使用 Pinia 管理全局状态，局部状态保留在组件内部 `ref` 中。
-*   **换行符**: 统一使用 `LF` (Linux 风格)。
+- **UI 组件使用**: 优先使用 Element Plus。所有自定义样式和主题配置应在 `styles/element/` 或 `assets/scss` 中进行。
+- **代码组织**: 复杂的业务逻辑应提取为独立的 Composable (`use*.ts`)。`.vue` 文件应专注于视图渲染。
+- **类型安全**: 必须使用 TypeScript 接口或类型定义。API 响应数据的类型定义应放在 `types/api/` 目录下。
+- **状态管理**: 使用 Pinia 管理全局状态，局部状态保留在组件内部 `ref` 中。
+- **换行符**: 统一使用 `LF` (Linux 风格)。
 
 ---
 
