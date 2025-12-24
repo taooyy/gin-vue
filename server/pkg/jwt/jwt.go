@@ -12,16 +12,18 @@ type CustomClaims struct {
 	UserID   uint   `json:"user_id"`
 	Username string `json:"username"`
 	Role     string `json:"role"`
+	OrgID    uint   `json:"org_id"`
 	jwt.RegisteredClaims
 }
 
 // GenerateToken 生成 Token
-func GenerateToken(userID uint, username, role string) (string, error) {
+func GenerateToken(userID uint, orgID uint, username, role string) (string, error) {
 	// 创建一个我们自己的声明
 	claims := CustomClaims{
 		UserID:   userID,
 		Username: username,
 		Role:     role,
+		OrgID:    orgID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(config.Cfg.Jwt.Expire) * time.Hour)), // 过期时间
 			IssuedAt:  jwt.NewNumericDate(time.Now()),                                                       // 签发时间

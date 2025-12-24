@@ -41,14 +41,19 @@ type JwtConfig struct {
 }
 
 // Init 初始化配置
-func Init() {
-	viper.SetConfigName("config")
+func Init(configName string) {
+	if configName == "" {
+		configName = "config.dev" // 默认加载开发环境配置
+		fmt.Println("未指定配置文件，默认加载 [config.dev.yaml]")
+	}
+
+	viper.SetConfigName(configName)
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("./configs") // 定义配置文件的路径
 
 	// 读取配置文件
 	if err := viper.ReadInConfig(); err != nil {
-		panic(fmt.Errorf("读取配置文件失败: %w", err))
+		panic(fmt.Errorf("读取配置文件 [%s.yaml] 失败: %w", configName, err))
 	}
 
 	// 将配置解析到 Cfg 变量

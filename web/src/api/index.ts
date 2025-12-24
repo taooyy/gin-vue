@@ -5,7 +5,8 @@ import { ElMessage } from 'element-plus';
 
 // 创建 axios 实例
 const apiClient = axios.create({
-  baseURL: 'http://127.0.0.1:8080', // 后端 API 的基础 URL
+  // baseURL 将从 .env 文件中根据当前环境动态加载
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000, // 请求超时时间
 });
 

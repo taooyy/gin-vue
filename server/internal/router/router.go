@@ -6,6 +6,7 @@ import (
 	"server/internal/repository"
 	"server/internal/router/middleware"
 	"server/internal/service"
+	"server/pkg/database" // 确保导入 database 包
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,26 +31,38 @@ func Init() *gin.Engine {
 	})
 
 	// --- 依赖注入 ---
-	// 在真实的应用中，这里可能会使用像 `wire` 或 `fx` 这样的依赖注入框架
-	userRepo := repository.NewMockUserRepository()
-	authService := service.NewAuthService(userRepo)
+	userRepo := repository.NewUserRepository(database.DB)
+	roleRepo := repository.NewRoleRepository(database.DB)
+	
+	authService := service.NewAuthService(userRepo, roleRepo)
+	accountService := service.NewAccountService(userRepo, roleRepo)
+
 	authHandler := handler.NewAuthHandler(authService)
+	accountHandler := handler.NewAccountHandler(accountService)
 
 	// --- 路由注册 ---
 	apiGroup := r.Group("/api/v1")
 	{
-		// 系统相关路由
+		// 登录路由，不需要认证
 		sysGroup := apiGroup.Group("/system")
 		{
-			// 登录路由，不需要认证
 			sysGroup.POST("/login", authHandler.Login)
 		}
+		
+		// 账号管理路由，需要认证和授权
+		accountGroup := apiGroup.Group("/accounts")
+		accountGroup.Use(middleware.AuthMiddleware(), middleware.CanCreateUsers(roleRepo))
+		{
+			accountGroup.POST("", accountHandler.CreateAccount)
+			accountGroup.GET("", accountHandler.ListAccounts)
+			accountGroup.PUT("/:id/status", accountHandler.UpdateAccountStatus)
+			accountGroup.DELETE("/:id", accountHandler.DeleteAccount)
+		}
 
-		// 受保护的路由组
+		// 其他受保护的路由组
 		protectedGroup := apiGroup.Group("")
 		protectedGroup.Use(middleware.AuthMiddleware())
 		{
-			// 在这里注册所有需要 JWT 认证的路由
 			protectedGroup.GET("/ping-auth", func(c *gin.Context) {
 				claims, _ := c.Get(middleware.ContextUserClaimsKey)
 				c.JSON(http.StatusOK, gin.H{
@@ -69,3 +82,4 @@ func Init() *gin.Engine {
 
 	return r
 }
+

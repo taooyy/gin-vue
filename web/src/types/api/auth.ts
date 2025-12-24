@@ -4,7 +4,6 @@
 export interface LoginRequest {
   username: string;
   password: string;
-  role: string;
 }
 
 // 对应后端的 model.UserInfo

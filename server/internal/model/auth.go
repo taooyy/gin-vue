@@ -4,7 +4,6 @@ package model
 type LoginRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
-	Role     string `json:"role" binding:"required"`
 }
 
 // LoginResponse 定义了登录成功后返回的结构

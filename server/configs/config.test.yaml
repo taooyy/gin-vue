@@ -1,0 +1,20 @@
+# server/configs/config.test.yaml
+
+# 服务器配置
+server:
+  port: 8081 # 测试环境使用不同端口
+
+# MySQL 数据库配置
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: "123456" # 强烈建议使用不同的密码
+  dbname: "gin_vue_test" # 使用独立的测试数据库
+  config: "charset=utf8mb4&parseTime=True&loc=Local"
+
+# JWT 配置
+jwt:
+  issuer: "gin-vue-test"
+  secret: "a_more_secure_secret_for_test" # 测试环境密钥
+  expire: 7200 # Token 有效期（秒）

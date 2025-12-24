@@ -35,11 +35,26 @@ type SysUser struct {
 	Avatar    string    `gorm:"type:varchar(255);comment:头像"`
 	RoleID    uint      `gorm:"not null;default:0;comment:角色ID"`
 	Status    int8      `gorm:"not null;default:1;comment:1:正常 2:锁定"`
+	CreatedBy uint      `gorm:"not null;default:0;comment:创建者ID"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 }
 
 func (SysUser) TableName() string {
 	return "sys_users"
+}
+
+// SysRole 角色表
+type SysRole struct {
+	ID             uint      `gorm:"primarykey"`
+	RoleName       string    `gorm:"type:varchar(50);not null;comment:角色名称"`
+	RoleKey        string    `gorm:"type:varchar(50);not null;uniqueIndex;comment:角色标识"`
+	CanCreateUsers bool      `gorm:"not null;default:false;comment:是否能创建子账号"`
+	CreatedAt      time.Time `gorm:"autoCreateTime"`
+	UpdatedAt      time.Time `gorm:"autoUpdateTime"`
+}
+
+func (SysRole) TableName() string {
+	return "sys_roles"
 }
 
 // SysDictionary 数据字典表

@@ -14,24 +14,16 @@
     <div class="login-right">
       <el-card class="login-box">
         <h2 class="login-title">欢迎回来</h2>
-        <p class="login-subtitle">请选择您的角色以继续</p>
-        <el-form label-position="top" class="login-form">
+        <p class="login-subtitle">请输入您的凭证</p>
+        <el-form label-position="top" class="login-form" @submit.prevent="handleLogin">
           <el-form-item label="用户名">
-             <el-input v-model="username" placeholder="请输入用户名（角色名）" prefix-icon="User" />
+             <el-input v-model="username" placeholder="请输入用户名" prefix-icon="User" />
           </el-form-item>
            <el-form-item label="密码">
              <el-input v-model="password" type="password" placeholder="请输入密码" prefix-icon="Lock" show-password />
           </el-form-item>
-          <el-form-item label="登录角色">
-            <el-select v-model="selectedRole" placeholder="选择登录的角色" style="width:100%">
-              <el-option label="平台管理员" value="platform_admin" />
-              <el-option label="学校管理员" value="school_admin" />
-              <el-option label="供应商" value="supplier" />
-              <el-option label="食堂管理员" value="canteen_admin" />
-            </el-select>
-          </el-form-item>
           <el-form-item>
-            <el-button type="primary" class="login-button" @click="handleLogin">登 录</el-button>
+            <el-button type="primary" class="login-button" native-type="submit">登 录</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -42,7 +34,7 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth'
 
-const { username, password, selectedRole, handleLogin } = useAuth()
+const { username, password, handleLogin } = useAuth()
 </script>
 
 <style scoped>

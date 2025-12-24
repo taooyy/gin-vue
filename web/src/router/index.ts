@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { usePermissionStore } from '@/stores/permission'
 import Login from '@/views/auth/Login.vue'
 import { ROLES } from '@/types/config'
 
@@ -7,29 +8,29 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/login', component: Login },
-    { path: '/', redirect: '/login' },
+    { path: '/', redirect: '/platform/dashboard' },
     // 平台布局
     {
       path: '/platform',
       component: () => import('@/layouts/PlatformLayout.vue'),
       meta: { roles: [ROLES.PLATFORM, ROLES.ROOT], title: '平台' }, // 平台管理员和Root可见
       children: [
-        { 
-          path: 'dashboard', 
+        {
+          path: 'dashboard',
           component: () => import('@/views/platform/dashboard.vue'),
           meta: { title: '平台总览', icon: 'DataLine' }
         },
-        { 
-          path: 'site-management', 
+        {
+          path: 'site-management',
           redirect: '/platform/site-management/list', // 默认重定向到站点展示
           meta: { title: '站点管理', icon: 'School' },
           children: [
-            { 
+            {
               path: 'list', // 对应 /platform/site-management/list
               component: () => import('@/views/platform/SiteList.vue'),
               meta: { title: '站点展示', icon: 'List' }
             },
-            { 
+            {
               path: 'manage', // 对应 /platform/site-management/manage
               component: () => import('@/views/platform/SiteManage.vue'),
               meta: { title: '站点管理', icon: 'Setting' }
@@ -79,14 +80,14 @@ const router = createRouter({
       meta: { roles: [ROLES.SCHOOL, ROLES.SUPPLIER, ROLES.CANTEEN, ROLES.ROOT], title: '工作区' },
       children: [
         // --- Shared ---
-        { 
-          path: 'dashboard', 
+        {
+          path: 'dashboard',
           component: () => import('@/views/workspace/dashboard.vue'),
-          meta: { title: '工作台', icon: 'Odometer', roles: [ROLES.SCHOOL, ROLES.SUPPLIER, ROLES.CANTEEN, ROLES.ROOT] }
+          meta: { title: '工作台', icon: 'Odometer', roles: [ROLES.SCHOOL, ROLES.SUPPLIER, ROLES.CANTEEN, ROLES.ROOT] }   
         },
         // --- School Menu ---
-        { 
-          path: 'scm', 
+        {
+          path: 'scm',
           redirect: '/workspace/scm/supplier',
           meta: { title: '供应链管理', icon: 'Box', roles: [ROLES.SCHOOL, ROLES.ROOT] },
           children: [
@@ -137,7 +138,7 @@ const router = createRouter({
             {
               path: 'list',
               component: () => import('@/views/workspace/order/OrderList.vue'),
-              meta: { title: '商户订单', roles: [ROLES.SCHOOL, ROLES.ROOT] } 
+              meta: { title: '商户订单', roles: [ROLES.SCHOOL, ROLES.ROOT] }
             },
             {
               path: 'aftersales',
@@ -334,12 +335,45 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const userStore = useUserStore()
-  if (to.path !== '/login' && !userStore.token) {
-    next('/login')
+  const permissionStore = usePermissionStore()
+  const hasToken = userStore.token
+
+  if (hasToken) {
+    // 用户已登录
+    if (to.path === '/login') {
+      // 如果已登录，则重定向到首页
+      next({ path: '/' })
+    } else {
+      // 检查菜单是否已生成
+      if (userStore.role && permissionStore.menus.length === 0) {
+        // 如果菜单为空（通常是刷新页面导致），则重新生成
+        try {
+          const layoutType = to.path.startsWith('/platform') ? 'platform' : 'tenant'
+          permissionStore.generateMenus(userStore.role, layoutType)
+          // 动态添加路由后，需要使用 next({ ...to, replace: true }) 来确保路由完全加载
+          next({ ...to, replace: true })
+        } catch (error) {
+          // 如果生成菜单出错（例如，角色信息有问题），则登出并跳转到登录页
+          console.error('生成菜单时出错:', error)
+          userStore.logout()
+          next('/login')
+        }
+      } else {
+        // 菜单已存在，直接放行
+        next()
+      }
+    }
   } else {
-    next()
+    // 用户未登录
+    if (to.path !== '/login') {
+      // 如果访问的是非登录页，则重定向到登录页
+      next('/login')
+    } else {
+      // 如果访问的是登录页，直接放行
+      next()
+    }
   }
 })
 

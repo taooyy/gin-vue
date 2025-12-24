@@ -8,6 +8,11 @@ import (
 // IUserRepository 定义用户仓库接口
 type IUserRepository interface {
 	GetUserByUsername(username string) (*model.SysUser, error)
+	CreateUser(user *model.SysUser) error
+	ListByCreator(creatorID uint, page int, pageSize int) ([]model.SysUser, int64, error)
+	GetUserByID(id uint) (*model.SysUser, error)
+	UpdateUser(user *model.SysUser) error
+	DeleteUserByID(id uint) error
 }
 
 // MockUserRepository 是一个模拟的用户仓库，用于测试和开发

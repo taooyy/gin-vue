@@ -2,9 +2,11 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"server/internal/model"
 	"server/internal/repository"
 	"server/pkg/jwt"
+	"server/pkg/password"
 )
 
 // IAuthService 定义认证服务接口
@@ -15,35 +17,38 @@ type IAuthService interface {
 // AuthService 实现了 IAuthService 接口
 type AuthService struct {
 	userRepo repository.IUserRepository
+	roleRepo repository.IRoleRepository
 }
 
 // NewAuthService 创建一个新的 AuthService 实例
-func NewAuthService(userRepo repository.IUserRepository) *AuthService {
-	return &AuthService{userRepo: userRepo}
+func NewAuthService(userRepo repository.IUserRepository, roleRepo repository.IRoleRepository) *AuthService {
+	return &AuthService{
+		userRepo: userRepo,
+		roleRepo: roleRepo,
+	}
 }
 
 // Login 处理用户登录逻辑
 func (s *AuthService) Login(req model.LoginRequest) (*model.LoginResponse, error) {
-	// 1. 根据用户名（这里用前端传来的角色作为用户名）从仓库获取用户信息
-	// 注意：这里的登录逻辑是模拟的，实际场景中用户名是独立于角色的
-	user, err := s.userRepo.GetUserByUsername(req.Role)
+	// 1. 根据用户名从仓库获取用户信息
+	user, err := s.userRepo.GetUserByUsername(req.Username)
 	if err != nil {
-		return nil, errors.New("用户不存在")
+		return nil, errors.New("用户名或密码不正确") // 出于安全，不明确指出是用户名错了
 	}
 
-	// 2. 校验密码（实际项目中密码应该是加密存储的）
-	if user.Password != req.Password {
-		return nil, errors.New("密码不正确")
+	// 2. 校验哈希密码
+	if !password.Check(req.Password, user.Password) {
+		return nil, errors.New("用户名或密码不正确")
 	}
 
-	// 3. 校验角色是否匹配（这里用作双重检查）
-	// 在模拟数据中，我们让用户名和角色名一致，所以 user.Username 就是角色
-	if user.Username != req.Role {
-		return nil, errors.New("角色选择不匹配")
+	// 3. 获取用户的角色信息
+	role, err := s.roleRepo.FindRoleByID(user.RoleID)
+	if err != nil {
+		return nil, fmt.Errorf("无法获取用户角色信息: %w", err)
 	}
 
 	// 4. 生成 Token
-	token, err := jwt.GenerateToken(user.ID, user.Username, req.Role)
+	token, err := jwt.GenerateToken(user.ID, user.OrgID, user.Username, role.RoleKey)
 	if err != nil {
 		return nil, errors.New("生成 Token 失败")
 	}
@@ -53,7 +58,7 @@ func (s *AuthService) Login(req model.LoginRequest) (*model.LoginResponse, error
 		ID:       user.ID,
 		Username: user.Username,
 		RealName: user.RealName,
-		Role:     req.Role,
+		Role:     role.RoleKey, // 使用数据库中的权威角色
 		OrgID:    user.OrgID,
 	}
 
