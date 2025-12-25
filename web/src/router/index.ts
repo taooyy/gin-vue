@@ -13,7 +13,7 @@ const router = createRouter({
     {
       path: '/platform',
       component: () => import('@/layouts/PlatformLayout.vue'),
-      meta: { roles: [ROLES.PLATFORM, ROLES.ROOT], title: '平台' }, // 平台管理员和Root可见
+      meta: { roles: [ROLES.PLATFORM, ROLES.PLATFORM_STAFF, ROLES.ROOT], title: '平台' }, // 平台管理员和Root可见
       children: [
         {
           path: 'dashboard',
@@ -85,7 +85,11 @@ const router = createRouter({
         {
           path: 'account',
           component: () => import('@/views/platform/AccountManagement.vue'),
-          meta: { title: '账号管理', icon: 'User', roles: [ROLES.PLATFORM, ROLES.ROOT] },
+          meta: {
+            title: '账号管理',
+            icon: 'User',
+            roles: [ROLES.PLATFORM, ROLES.ROOT],
+          },
         },
       ],
     },
@@ -93,7 +97,17 @@ const router = createRouter({
     {
       path: '/workspace',
       component: () => import('@/layouts/TenantLayout.vue'),
-      meta: { roles: [ROLES.SCHOOL, ROLES.SUPPLIER, ROLES.CANTEEN, ROLES.ROOT], title: '工作区' },
+      meta: {
+        roles: [
+          ROLES.SCHOOL,
+          ROLES.SCHOOL_STAFF,
+          ROLES.SUPPLIER,
+          ROLES.SUPPLIER_STAFF,
+          ROLES.CANTEEN,
+          ROLES.ROOT,
+        ],
+        title: '工作区',
+      },
       children: [
         // --- Shared ---
         {
@@ -102,212 +116,300 @@ const router = createRouter({
           meta: {
             title: '工作台',
             icon: 'Odometer',
-            roles: [ROLES.SCHOOL, ROLES.SUPPLIER, ROLES.CANTEEN, ROLES.ROOT],
+            roles: [
+              ROLES.SCHOOL,
+              ROLES.SCHOOL_STAFF,
+              ROLES.SUPPLIER,
+              ROLES.SUPPLIER_STAFF,
+              ROLES.CANTEEN,
+              ROLES.ROOT,
+            ],
           },
         },
         // --- School Menu ---
         {
           path: 'scm',
           redirect: '/workspace/scm/supplier',
-          meta: { title: '供应链管理', icon: 'Box', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+          meta: {
+            title: '供应链管理',
+            icon: 'Box',
+            roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT],
+          },
           children: [
             {
               path: 'supplier',
               component: () => import('@/views/workspace/scm/SupplierManagement.vue'),
-              meta: { title: '供应商管理', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '供应商管理', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'staff',
               component: () => import('@/views/workspace/scm/SupplierStaff.vue'),
-              meta: { title: '供应商员工', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '供应商员工', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'order',
               component: () => import('@/views/workspace/scm/SupplierOrder.vue'),
-              meta: { title: '供应商订单', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '供应商订单', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
           ],
         },
         {
           path: 'canteen',
           redirect: '/workspace/canteen/overview',
-          meta: { title: '食堂管理', icon: 'OfficeBuilding', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+          meta: {
+            title: '食堂管理',
+            icon: 'OfficeBuilding',
+            roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT],
+          },
           children: [
             {
               path: 'overview',
               component: () => import('@/views/workspace/canteen/CanteenOverview.vue'),
-              meta: { title: '食堂总览', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '食堂总览', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'merchant',
               component: () => import('@/views/workspace/canteen/MerchantList.vue'),
-              meta: { title: '商户列表', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '商户列表', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
           ],
         },
         {
           path: 'order',
           redirect: '/workspace/order/summary',
-          meta: { title: '订单管理', icon: 'Tickets', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+          meta: {
+            title: '订单管理',
+            icon: 'Tickets',
+            roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT],
+          },
           children: [
             {
               path: 'summary',
               component: () => import('@/views/workspace/order/OrderSummary.vue'),
-              meta: { title: '订单汇总', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '订单汇总', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'list',
               component: () => import('@/views/workspace/order/OrderList.vue'),
-              meta: { title: '商户订单', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '商户订单', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'aftersales',
               component: () => import('@/views/workspace/order/OrderAftersales.vue'),
-              meta: { title: '订单售后', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '订单售后', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
           ],
         },
         {
           path: 'product',
           redirect: '/workspace/product/audit',
-          meta: { title: '商品管理', icon: 'Goods', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+          meta: {
+            title: '商品管理',
+            icon: 'Goods',
+            roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT],
+          },
           children: [
             {
               path: 'audit',
               component: () => import('@/views/workspace/product/ProductAudit.vue'),
-              meta: { title: '商品审核', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '商品审核', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'library',
               component: () => import('@/views/workspace/product/ProductLibrary.vue'),
-              meta: { title: '商品库', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '商品库', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'listing',
               component: () => import('@/views/workspace/product/ProductListing.vue'),
-              meta: { title: '上架管理', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '上架管理', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'pricing',
               component: () => import('@/views/workspace/product/ProductPricing.vue'),
-              meta: { title: '商品价格', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '商品价格', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
           ],
         },
         {
           path: 'traceability',
           component: () => import('@/views/workspace/traceability/TraceabilityManagement.vue'),
-          meta: { title: '溯源管理', icon: 'Guide', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+          meta: {
+            title: '溯源管理',
+            icon: 'Guide',
+            roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT],
+          },
         },
         {
           path: 'school-settlement',
           redirect: '/workspace/school-settlement/statements',
-          meta: { title: '结算管理', icon: 'Coin', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+          meta: {
+            title: '结算管理',
+            icon: 'Coin',
+            roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT],
+          },
           children: [
             {
               path: 'statements',
               component: () => import('@/views/workspace/settlement/SchoolStatements.vue'),
-              meta: { title: '对账单', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '对账单', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'canteen',
               component: () => import('@/views/workspace/settlement/CanteenSettlement.vue'),
-              meta: { title: '食堂结算', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '食堂结算', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'supplier',
               component: () => import('@/views/workspace/settlement/SupplierSettlement.vue'),
-              meta: { title: '供应商结算', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '供应商结算', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
             {
               path: 'merchant',
               component: () => import('@/views/workspace/settlement/MerchantSettlement.vue'),
-              meta: { title: '商户结算', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+              meta: { title: '商户结算', roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT] },
             },
           ],
         },
         {
           path: 'school-account',
           component: () => import('@/views/workspace/school/AccountManagement.vue'),
-          meta: { title: '账号管理', icon: 'User', roles: [ROLES.SCHOOL, ROLES.ROOT] },
+          meta: {
+            title: '账号管理',
+            icon: 'User',
+            roles: [ROLES.SCHOOL, ROLES.ROOT],
+          },
+        },
+        {
+          path: 'school-supplier',
+          component: () => import('@/views/workspace/school/SupplierManagement.vue'),
+          meta: {
+            title: '供应商管理(新)',
+            icon: 'OfficeBuilding',
+            roles: [ROLES.SCHOOL, ROLES.SCHOOL_STAFF, ROLES.ROOT],
+          },
         },
         // --- Supplier Menu ---
         {
           path: 'supplier-product',
           redirect: '/workspace/supplier-product/upload',
-          meta: { title: '商品管理', icon: 'Goods', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+          meta: {
+            title: '商品管理',
+            icon: 'Goods',
+            roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+          },
           children: [
             {
               path: 'upload',
               component: () => import('@/views/workspace/supplier/product/ProductUpload.vue'),
-              meta: { title: '商品上传', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+              meta: {
+                title: '商品上传',
+                roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+              },
             },
             {
               path: 'quotation',
               component: () => import('@/views/workspace/supplier/product/ProductQuotation.vue'),
-              meta: { title: '商品报价', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+              meta: {
+                title: '商品报价',
+                roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+              },
             },
             {
               path: 'modification',
               component: () => import('@/views/workspace/supplier/product/ProductModification.vue'),
-              meta: { title: '商品修改', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+              meta: {
+                title: '商品修改',
+                roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+              },
             },
           ],
         },
         {
           path: 'supplier-delivery',
           redirect: '/workspace/supplier-delivery/picking',
-          meta: { title: '配送管理', icon: 'Van', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+          meta: {
+            title: '配送管理',
+            icon: 'Van',
+            roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+          },
           children: [
             {
               path: 'picking',
               component: () => import('@/views/workspace/supplier/delivery/OrderPicking.vue'),
-              meta: { title: '订单分拣', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+              meta: {
+                title: '订单分拣',
+                roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+              },
             },
             {
               path: 'delivery',
               component: () => import('@/views/workspace/supplier/delivery/OrderDelivery.vue'),
-              meta: { title: '订单配送', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+              meta: {
+                title: '订单配送',
+                roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+              },
             },
           ],
         },
         {
           path: 'supplier-order',
           redirect: '/workspace/supplier-order/list',
-          meta: { title: '订单管理', icon: 'Tickets', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+          meta: {
+            title: '订单管理',
+            icon: 'Tickets',
+            roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+          },
           children: [
             {
               path: 'list',
               component: () => import('@/views/workspace/supplier/order/OrderList.vue'),
-              meta: { title: '订单', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+              meta: { title: '订单', roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT] },
             },
             {
               path: 'aftersales',
               component: () => import('@/views/workspace/supplier/order/OrderAftersales.vue'),
-              meta: { title: '订单售后', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+              meta: {
+                title: '订单售后',
+                roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+              },
             },
           ],
         },
         {
           path: 'supplier-account',
           component: () => import('@/views/workspace/supplier/AccountManagement.vue'),
-          meta: { title: '账号管理', icon: 'User', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+          meta: {
+            title: '账号管理',
+            icon: 'User',
+            roles: [ROLES.SUPPLIER, ROLES.ROOT],
+          },
         },
         {
           path: 'supplier-settlement',
           redirect: '/workspace/supplier-settlement/statements',
-          meta: { title: '结算管理', icon: 'Coin', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+          meta: {
+            title: '结算管理',
+            icon: 'Coin',
+            roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+          },
           children: [
             {
               path: 'statements',
               component: () => import('@/views/workspace/supplier/settlement/Statements.vue'),
-              meta: { title: '对账单', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+              meta: {
+                title: '对账单',
+                roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+              },
             },
             {
               path: 'statistics',
               component: () =>
                 import('@/views/workspace/supplier/settlement/SettlementStatistics.vue'),
-              meta: { title: '结算统计', roles: [ROLES.SUPPLIER, ROLES.ROOT] },
+              meta: {
+                title: '结算统计',
+                roles: [ROLES.SUPPLIER, ROLES.SUPPLIER_STAFF, ROLES.ROOT],
+              },
             },
           ],
         },

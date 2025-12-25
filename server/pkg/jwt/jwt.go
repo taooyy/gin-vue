@@ -1,8 +1,9 @@
 package jwt
 
 import (
-	"server/internal/config"
 	"time"
+
+	"server/internal/config"
 
 	"github.com/golang-jwt/jwt/v5"
 )

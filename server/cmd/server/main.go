@@ -3,10 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"strings"
+
 	"server/internal/config"
 	"server/internal/router"
 	"server/pkg/database"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )

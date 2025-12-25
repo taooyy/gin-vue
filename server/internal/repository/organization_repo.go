@@ -16,7 +16,7 @@ type IOrganizationRepository interface {
 	// GetByID 根据ID获取组织信息
 	GetByID(id uint) (*model.SysOrganization, error)
 	// List 分页列出组织，可按组织类型筛选
-	List(page, pageSize int, orgTypes []int8) ([]model.SysOrganization, int64, error)
+	List(page, pageSize int, orgTypes []int8, parentID *uint) ([]model.SysOrganization, int64, error)
 	// Update 更新一个已有的组织
 	Update(org *model.SysOrganization) error
 	// Delete 根据ID删除一个组织

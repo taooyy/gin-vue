@@ -3,11 +3,12 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
+
 	"server/internal/model"
 	"server/internal/router/middleware"
 	"server/internal/service"
 	"server/pkg/jwt"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )

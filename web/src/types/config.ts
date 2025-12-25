@@ -1,7 +1,10 @@
 export const ROLES = {
   PLATFORM: 'platform_admin',
+  PLATFORM_STAFF: 'platform_staff',
   SCHOOL: 'school_admin',
-  SUPPLIER: 'supplier',
+  SCHOOL_STAFF: 'school_staff',
+  SUPPLIER: 'supplier_admin',
+  SUPPLIER_STAFF: 'supplier_staff',
   CANTEEN: 'canteen_admin',
   ROOT: 'root',
 };

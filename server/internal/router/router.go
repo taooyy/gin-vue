@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+
 	"server/internal/handler"
 	"server/internal/repository"
 	"server/internal/router/middleware"
@@ -40,11 +41,13 @@ func Init() *gin.Engine {
 	accountService := service.NewAccountService(userRepo, roleRepo)
 	schoolService := service.NewSchoolService(orgRepo, userRepo, roleRepo)
 	logService := service.NewLogService(logRepo)
+	supplierService := service.NewSupplierService(orgRepo, userRepo, roleRepo)
 
 	authHandler := handler.NewAuthHandler(authService)
 	accountHandler := handler.NewAccountHandler(accountService)
 	schoolHandler := handler.NewSchoolHandler(schoolService)
 	logHandler := handler.NewLogHandler(logService)
+	supplierHandler := handler.NewSupplierHandler(supplierService)
 
 	// --- 路由注册 ---
 	apiGroup := r.Group("/api/v1")
@@ -86,6 +89,16 @@ func Init() *gin.Engine {
 		logGroup.Use(middleware.AuthMiddleware(), middleware.PlatformAdminAuth())
 		{
 			logGroup.GET("", logHandler.List)
+		}
+
+		supplierGroup := apiGroup.Group("/suppliers")
+		supplierGroup.Use(middleware.AuthMiddleware())
+		{
+			supplierGroup.POST("", supplierHandler.CreateSupplier)
+			supplierGroup.GET("", supplierHandler.ListSuppliers)
+			supplierGroup.GET("/:id", supplierHandler.GetSupplierByID)
+			supplierGroup.PUT("/:id", supplierHandler.UpdateSupplier)
+			supplierGroup.PUT("/:id/status", supplierHandler.UpdateSupplierStatus)
 		}
 
 		// 其他受保护的路由组

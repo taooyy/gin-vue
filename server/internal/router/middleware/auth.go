@@ -2,8 +2,9 @@ package middleware
 
 import (
 	"net/http"
-	"server/pkg/jwt"
 	"strings"
+
+	"server/pkg/jwt"
 
 	"github.com/gin-gonic/gin"
 )

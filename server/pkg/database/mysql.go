@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
+
 	"server/internal/config"
 	"server/internal/model" // 导入所有模型的包
 	"server/pkg/password"
-	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

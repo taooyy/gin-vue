@@ -28,8 +28,11 @@ func (r *logRepository) List(page, pageSize int, orgID uint) ([]model.SysOpLog, 
 
 	query := r.db.Model(&model.SysOpLog{})
 
-	// 如果 orgID 不为0，则按组织ID筛选
-	if orgID != 0 {
+	// 默认查询所有组织类型为0（平台）的日志
+	if orgID == 0 {
+		query = query.Where("org_id IN (SELECT id FROM sys_organizations WHERE org_type = 0)")
+	} else {
+		// 按指定的 orgID 筛选
 		query = query.Where("org_id = ?", orgID)
 	}
 

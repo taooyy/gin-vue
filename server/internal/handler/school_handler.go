@@ -2,12 +2,14 @@
 package handler
 
 import (
-	"server/internal/model"
-	"server/internal/service"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
+	"server/internal/model"
+	"server/internal/service"
+
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // SchoolHandler 封装了学校相关的 HTTP 处理函数

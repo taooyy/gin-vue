@@ -3,6 +3,7 @@ package middleware
 
 import (
 	"net/http"
+
 	"server/internal/repository"
 	"server/pkg/jwt"
 
@@ -60,7 +61,9 @@ func CanCreateUsers(roleRepo repository.IRoleRepository) gin.HandlerFunc {
 
 const RolePlatformAdmin = "platform_admin"
 
-// PlatformAdminAuth 是一个授权中间件，用于检查当前用户是否为平台管理员
+const RolePlatformStaff = "platform_staff"
+
+// PlatformAdminAuth 是一个授权中间件，用于检查当前用户是否为平台管理员或员工
 func PlatformAdminAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		claims, exists := c.Get(ContextUserClaimsKey)
@@ -77,8 +80,8 @@ func PlatformAdminAuth() gin.HandlerFunc {
 			return
 		}
 
-		// 检查角色是否为平台管理员
-		if userClaims.Role != RolePlatformAdmin {
+		// 检查角色是否为平台管理员或员工
+		if userClaims.Role != RolePlatformAdmin && userClaims.Role != RolePlatformStaff {
 			c.JSON(http.StatusForbidden, gin.H{"error": "需要平台管理员权限"})
 			c.Abort()
 			return

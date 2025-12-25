@@ -30,13 +30,16 @@ func (repo *organizationRepository) GetByID(id uint) (*model.SysOrganization, er
 	return &org, err
 }
 
-func (repo *organizationRepository) List(page, pageSize int, orgTypes []int8) ([]model.SysOrganization, int64, error) {
+func (repo *organizationRepository) List(page, pageSize int, orgTypes []int8, parentID *uint) ([]model.SysOrganization, int64, error) {
 	var orgs []model.SysOrganization
 	var total int64
 
 	query := repo.db.Model(&model.SysOrganization{})
 	if len(orgTypes) > 0 {
 		query = query.Where("org_type IN ?", orgTypes)
+	}
+	if parentID != nil {
+		query = query.Where("parent_id = ?", *parentID)
 	}
 
 	err := query.Count(&total).Error

@@ -2,11 +2,13 @@
 package handler
 
 import (
-	"server/internal/service"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
+	"server/internal/service"
+
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // LogHandler 封装了日志相关的 HTTP 处理函数

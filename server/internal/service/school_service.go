@@ -3,6 +3,7 @@ package service
 
 import (
 	"errors"
+
 	"server/internal/model"
 	"server/internal/repository"
 	"server/pkg/password"
@@ -10,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-const OrgTypeSchool int8 = 2
+const OrgTypeSchool int8 = 1
 const RoleSchoolAdmin = "school_admin"
 
 // ISchoolService 定义学校管理服务接口
@@ -164,7 +165,7 @@ func (s *schoolService) CreateSchool(req *model.CreateSchoolRequest) error {
 
 func (s *schoolService) ListSchools(page, pageSize int) ([]model.SchoolListItem, int64, error) {
 
-	orgs, total, err := s.orgRepo.List(page, pageSize, []int8{OrgTypeSchool})
+	orgs, total, err := s.orgRepo.List(page, pageSize, []int8{OrgTypeSchool}, nil)
 
 	if err != nil {
 

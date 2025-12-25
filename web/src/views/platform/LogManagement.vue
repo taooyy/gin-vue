@@ -14,7 +14,7 @@
           clearable
           @change="handleFilter"
         >
-          <el-option label="平台日志" :value="1" />
+          <el-option label="平台日志" :value="0" />
           <el-option
             v-for="item in schoolList"
             :key="item.ID"
@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive, onMounted } from 'vue';
+  import { ref, reactive, onMounted, computed } from 'vue';
   import Pagination from '@/components/Pagination/index.vue';
   import { listLogsApi, type OpLog, type ListLogsParams } from '@/api/log';
   import { listSchoolsApi, type School } from '@/api/school';
@@ -60,7 +60,7 @@
   const logList = ref<OpLog[]>([]); // 日志列表数据
   const schoolList = ref<School[]>([]); // 用于下拉选择的学校列表
   const total = ref(0); // 日志总条数
-  const selectedOrgId = ref<number | undefined>(1); // 选中的组织ID，默认为1（平台）
+  const selectedOrgId = ref<number | undefined>(0); // 选中的组织ID，默认为0（平台）
 
   // 分页数据
   const pagination = reactive({
@@ -81,7 +81,7 @@
       pageSize: pagination.pageSize,
     };
     // 如果 selectedOrgId 有值，则作为查询参数
-    if (selectedOrgId.value) {
+    if (selectedOrgId.value !== undefined) {
       params.orgId = selectedOrgId.value;
     }
 

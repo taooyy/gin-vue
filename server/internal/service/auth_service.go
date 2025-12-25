@@ -3,6 +3,7 @@ package service
 import (
 	"errors"
 	"fmt"
+
 	"server/internal/model"
 	"server/internal/repository"
 	"server/pkg/jwt"
