@@ -34,14 +34,17 @@ func Init() *gin.Engine {
 	userRepo := repository.NewUserRepository(database.DB)
 	roleRepo := repository.NewRoleRepository(database.DB)
 	orgRepo := repository.NewOrganizationRepository(database.DB)
+	logRepo := repository.NewLogRepository(database.DB)
 
 	authService := service.NewAuthService(userRepo, roleRepo)
 	accountService := service.NewAccountService(userRepo, roleRepo)
 	schoolService := service.NewSchoolService(orgRepo, userRepo, roleRepo)
+	logService := service.NewLogService(logRepo)
 
 	authHandler := handler.NewAuthHandler(authService)
 	accountHandler := handler.NewAccountHandler(accountService)
 	schoolHandler := handler.NewSchoolHandler(schoolService)
+	logHandler := handler.NewLogHandler(logService)
 
 	// --- 路由注册 ---
 	apiGroup := r.Group("/api/v1")
@@ -51,6 +54,9 @@ func Init() *gin.Engine {
 		{
 			sysGroup.POST("/login", authHandler.Login)
 		}
+
+		// Use a middleware to log operations on subsequent groups
+		apiGroup.Use(middleware.LogOperation(logService))
 
 		// 账号管理路由，需要认证和授权
 		accountGroup := apiGroup.Group("/accounts")
@@ -73,6 +79,13 @@ func Init() *gin.Engine {
 			schoolGroup.GET("/:id", schoolHandler.GetByID)
 			schoolGroup.PUT("/:id", schoolHandler.Update)
 			schoolGroup.DELETE("/:id", schoolHandler.Delete)
+		}
+
+		// 日志管理路由
+		logGroup := apiGroup.Group("/logs")
+		logGroup.Use(middleware.AuthMiddleware(), middleware.PlatformAdminAuth())
+		{
+			logGroup.GET("", logHandler.List)
 		}
 
 		// 其他受保护的路由组

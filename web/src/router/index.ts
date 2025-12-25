@@ -41,18 +41,32 @@ const router = createRouter({
         },
         {
           path: 'permission',
-          redirect: '/platform/permission/user', // 默认重定向到用户权限管理
+          redirect: '/platform/permission/site-permission',
           meta: { title: '权限管理', icon: 'Unlock' },
           children: [
             {
-              path: 'user', // 对应 /platform/permission/user
-              component: () => import('@/views/platform/UserPermission.vue'),
-              meta: { title: '用户权限管理', icon: 'UserFilled' },
+              path: 'site-permission',
+              name: 'SitePermission',
+              component: () => import('@/views/platform/SitePermission.vue'),
+              meta: { title: '站点权限管理' },
             },
             {
-              path: 'role', // 对应 /platform/permission/role
+              path: 'role-management',
+              name: 'SiteRoleManagement',
               component: () => import('@/views/platform/RoleManagement.vue'),
-              meta: { title: '角色管理', icon: 'Avatar' },
+              meta: { title: '站点角色管理' },
+            },
+            {
+              path: 'feature-display',
+              name: 'SiteFeatureDisplay',
+              component: () => import('@/views/platform/FeatureDisplay.vue'),
+              meta: { title: '站点功能展示' },
+            },
+            {
+              path: 'role-assignment',
+              name: 'RoleFeatureAssignment',
+              component: () => import('@/views/platform/RolePermission.vue'),
+              meta: { title: '角色功能划分' },
             },
           ],
         },

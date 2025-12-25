@@ -10,7 +10,7 @@ type SysOrganization struct {
 	Name         string    `gorm:"type:varchar(100);not null;comment:组织名称"`
 	OrgType      int8      `gorm:"not null;comment:1:平台 2:学校 3:供应商 4:食堂 5:商户"`
 	ParentID     uint      `gorm:"not null;default:0;comment:父级ID"`
-	AdminUserID  uint      `gorm:"comment:管理员用户ID"`
+	AdminUserID  uint      `gorm:"comment:站点的主管理员用户ID,用于直接关联"`
 	ContactName  string    `gorm:"type:varchar(50);comment:负责人"`
 	ContactPhone string    `gorm:"type:varchar(20);comment:电话"`
 	Address      string    `gorm:"type:varchar(255);comment:地址"`
@@ -74,10 +74,12 @@ func (SysDictionary) TableName() string {
 // SysOpLog 操作日志表
 type SysOpLog struct {
 	ID        uint      `gorm:"primarykey"`
-	UserID    uint      `gorm:"not null;comment:操作人"`
+	UserID    uint      `gorm:"not null;comment:操作人ID"`
+	Username  string    `gorm:"type:varchar(50);not null;comment:操作人用户名"`
+	OrgID     uint      `gorm:"not null;comment:所属组织ID"`
 	Module    string    `gorm:"type:varchar(50);not null;comment:模块"`
 	Action    string    `gorm:"type:varchar(50);not null;comment:动作"`
-	Params    string    `gorm:"type:json;comment:参数"`
+	Params    string    `gorm:"type:text;comment:参数"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 }
 

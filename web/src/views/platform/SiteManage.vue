@@ -164,18 +164,22 @@
   } from '@/api/school';
   import { resetPasswordApi, type ResetPasswordPayload } from '@/api/account';
 
-  const isSubmitting = ref(false);
-  const isResettingPassword = ref(false);
+  // --- 状态引用 ---
+  const isSubmitting = ref(false); // 控制主对话框提交按钮的加载状态
+  const isResettingPassword = ref(false); // 控制重置密码对话框提交按钮的加载状态
 
   // --- 列表和分页 ---
-  const loading = ref(false);
-  const schoolList = ref<School[]>([]);
-  const total = ref(0);
+  const loading = ref(false); // 控制表格的加载状态
+  const schoolList = ref<School[]>([]); // 学校列表数据
+  const total = ref(0); // 总数据条数
   const pagination = reactive({
     page: 1,
     pageSize: 20,
   });
 
+  /**
+   * @description 获取学校列表数据
+   */
   const getList = async () => {
     loading.value = true;
     try {
@@ -189,16 +193,20 @@
     }
   };
 
+  // --- 生命周期钩子 ---
   onMounted(() => {
     getList();
   });
 
-  // --- 对话框和表单 ---
-  const dialogVisible = ref(false);
-  const dialogMode = ref<'create' | 'edit'>('create');
-  const currentSchoolId = ref<number | null>(null);
-  const formRef = ref<FormInstance | null>(null);
+  // --- 新建/编辑站点对话框 ---
+  const dialogVisible = ref(false); // 控制主对话框的显示与隐藏
+  const dialogMode = ref<'create' | 'edit'>('create'); // 对话框模式：'create' 或 'edit'
+  const currentSchoolId = ref<number | null>(null); // 当前正在编辑的学校ID
+  const formRef = ref<FormInstance | null>(null); // 表单引用
 
+  /**
+   * @description 获取表单的初始数据
+   */
   const getInitialFormData = (): CreateSchoolPayload & {
     confirmAdminPassword: '';
     isEnabled: boolean;
@@ -214,8 +222,11 @@
     adminRealName: '',
   });
 
-  const formData = reactive(getInitialFormData());
+  const formData = reactive(getInitialFormData()); // 表单数据
 
+  // --- 表单校验规则 ---
+
+  // 校验两次输入的管理员密码是否一致
   const validateAdminPass = (_rule: any, value: any, callback: any) => {
     if (value === '') {
       callback(new Error('请再次输入密码'));
@@ -237,14 +248,21 @@
     confirmAdminPassword: [{ required: true, validator: validateAdminPass, trigger: 'blur' }],
   });
 
+  /**
+   * @description 打开新建对话框
+   */
   const handleOpenDialog = () => {
     dialogMode.value = 'create';
     dialogVisible.value = true;
   };
 
+  /**
+   * @description 打开编辑对话框，并填充数据
+   */
   const handleEdit = (row: School) => {
     dialogMode.value = 'edit';
     currentSchoolId.value = row.ID;
+    // 填充表单数据
     formData.name = row.Name;
     formData.contactName = row.ContactName;
     formData.contactPhone = row.ContactPhone;
@@ -253,6 +271,9 @@
     dialogVisible.value = true;
   };
 
+  /**
+   * @description 关闭对话框时的回调，重置表单和状态
+   */
   const handleCloseDialog = () => {
     formRef.value?.resetFields();
     Object.assign(formData, getInitialFormData());
@@ -260,6 +281,9 @@
     dialogVisible.value = false;
   };
 
+  /**
+   * @description 处理新建或编辑表单的提交
+   */
   const handleSubmit = async () => {
     if (!formRef.value) return;
     await formRef.value.validate(async (valid) => {
@@ -282,7 +306,7 @@
             ElMessage.success('站点更新成功');
           }
           handleCloseDialog();
-          await getList();
+          await getList(); // 刷新列表
         } catch (error) {
           console.error(error);
         } finally {
@@ -293,11 +317,12 @@
   };
 
   // --- 重置管理员密码对话框 ---
-  const resetPwdDialogVisible = ref(false);
-  const currentAdminUserId = ref<number | null>(null);
-  const resetPwdFormRef = ref<FormInstance | null>(null);
+  const resetPwdDialogVisible = ref(false); // 控制重置密码对话框的显示
+  const currentAdminUserId = ref<number | null>(null); // 当前要重置密码的管理员ID
+  const resetPwdFormRef = ref<FormInstance | null>(null); // 重置密码表单的引用
   const resetPwdFormData = reactive({ password: '', confirmPassword: '' });
 
+  // 校验两次输入的新密码是否一致
   const validateResetPass = (_rule: any, value: any, callback: any) => {
     if (value === '') {
       callback(new Error('请再次输入密码'));
@@ -316,6 +341,9 @@
     confirmPassword: [{ required: true, validator: validateResetPass, trigger: 'blur' }],
   });
 
+  /**
+   * @description 打开重置密码对话框
+   */
   const handleOpenResetPwdDialog = (adminUserId: number) => {
     if (!adminUserId) {
       ElMessage.warning('该站点没有关联的管理员账号');
@@ -325,12 +353,18 @@
     resetPwdDialogVisible.value = true;
   };
 
+  /**
+   * @description 关闭重置密码对话框时的回调
+   */
   const handleCloseResetPwdDialog = () => {
     resetPwdFormRef.value?.resetFields();
     currentAdminUserId.value = null;
     resetPwdDialogVisible.value = false;
   };
 
+  /**
+   * @description 提交新密码
+   */
   const handleResetPwdSubmit = async () => {
     if (!resetPwdFormRef.value || !currentAdminUserId.value) return;
     await resetPwdFormRef.value.validate(async (valid) => {
@@ -350,13 +384,18 @@
     });
   };
 
-  // --- 其他操作 ---
+  // --- 其他表格行内操作 ---
+
+  /**
+   * @description 处理站点状态（启用/禁用）的变更
+   */
   const handleStatusChange = async (row: School) => {
     const actionText = row.IsEnabled ? '启用' : '禁用';
     try {
       await ElMessageBox.confirm(`确定要${actionText} [${row.Name}] 吗？`, '提示', {
         type: 'warning',
       });
+      // 直接调用更新接口
       await updateSchoolApi(row.ID, {
         Name: row.Name,
         ContactName: row.ContactName,
@@ -367,10 +406,13 @@
       ElMessage.success(`${actionText}成功`);
     } catch (error) {
       if (error !== 'cancel') ElMessage.error('操作失败');
-      await getList(); // 失败或取消时恢复状态
+      await getList(); // 如果操作失败或用户取消，刷新列表以恢复前端状态
     }
   };
 
+  /**
+   * @description 处理删除站点的操作
+   */
   const handleDelete = async (row: School) => {
     try {
       await ElMessageBox.confirm(`确定要永久删除 [${row.Name}] 吗？此操作不可恢复。`, '危险操作', {
@@ -378,7 +420,7 @@
       });
       await deleteSchoolApi(row.ID);
       ElMessage.success('删除成功');
-      await getList();
+      await getList(); // 刷新列表
     } catch (error) {
       if (error !== 'cancel') ElMessage.error('删除失败');
     }
