@@ -11,6 +11,7 @@ type IUserRepository interface {
 	CreateUser(user *model.SysUser) error
 	ListByCreator(creatorID uint, page int, pageSize int) ([]model.SysUser, int64, error)
 	GetUserByID(id uint) (*model.SysUser, error)
+	FindUsersByIDs(ids []uint) ([]model.SysUser, error)
 	UpdateUser(user *model.SysUser) error
 	DeleteUserByID(id uint) error
 }

@@ -9,7 +9,7 @@
       </div>
       <Sidebar />
     </div>
-    <div class="content-wrapper">
+    <div class="content-wrapper" :style="{ marginLeft: sidebarWidth }">
       <Header />
       <div class="main-container">
         <router-view />
@@ -28,17 +28,23 @@
 </script>
 <style scoped>
   .platform-layout {
-    display: flex;
     height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
   }
 
   .content-wrapper {
-    flex: 1;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    transition: margin-left 0.3s ease;
   }
 
   .sidebar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     background: #2a384a;

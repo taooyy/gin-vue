@@ -33,12 +33,15 @@ func Init() *gin.Engine {
 	// --- 依赖注入 ---
 	userRepo := repository.NewUserRepository(database.DB)
 	roleRepo := repository.NewRoleRepository(database.DB)
+	orgRepo := repository.NewOrganizationRepository(database.DB)
 
 	authService := service.NewAuthService(userRepo, roleRepo)
 	accountService := service.NewAccountService(userRepo, roleRepo)
+	schoolService := service.NewSchoolService(orgRepo, userRepo, roleRepo)
 
 	authHandler := handler.NewAuthHandler(authService)
 	accountHandler := handler.NewAccountHandler(accountService)
+	schoolHandler := handler.NewSchoolHandler(schoolService)
 
 	// --- 路由注册 ---
 	apiGroup := r.Group("/api/v1")
@@ -59,6 +62,17 @@ func Init() *gin.Engine {
 			accountGroup.DELETE("/:id", accountHandler.DeleteAccount)
 			accountGroup.PUT("/:id", accountHandler.UpdateAccount)
 			accountGroup.PUT("/:id/password", accountHandler.ResetPassword)
+		}
+
+		// 站点(学校)管理路由
+		schoolGroup := apiGroup.Group("/schools")
+		schoolGroup.Use(middleware.AuthMiddleware(), middleware.PlatformAdminAuth())
+		{
+			schoolGroup.POST("", schoolHandler.Create)
+			schoolGroup.GET("", schoolHandler.List)
+			schoolGroup.GET("/:id", schoolHandler.GetByID)
+			schoolGroup.PUT("/:id", schoolHandler.Update)
+			schoolGroup.DELETE("/:id", schoolHandler.Delete)
 		}
 
 		// 其他受保护的路由组

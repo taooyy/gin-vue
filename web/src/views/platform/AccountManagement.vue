@@ -39,12 +39,14 @@
         </el-table-column>
       </el-table>
 
-      <Pagination
-        :total="total"
-        v-model:page="pagination.page"
-        v-model:limit="pagination.pageSize"
-        @pagination="getAccountList"
-      />
+      <div class="pagination-container">
+        <Pagination
+          :total="total"
+          v-model:page="pagination.page"
+          v-model:limit="pagination.pageSize"
+          @pagination="getAccountList"
+        />
+      </div>
     </el-card>
 
     <el-dialog
@@ -89,7 +91,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleSubmit"> 确定 </el-button>
+          <el-button type="primary" :loading="isSubmitting" @click="handleSubmit"> 确定 </el-button>
         </span>
       </template>
     </el-dialog>
@@ -126,7 +128,9 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="resetPwdDialogVisible = false">取消</el-button>
-          <el-button type="primary" @click="handleResetPwdSubmit"> 确定 </el-button>
+          <el-button type="primary" :loading="isResettingPassword" @click="handleResetPwdSubmit">
+            确定
+          </el-button>
         </span>
       </template>
     </el-dialog>
@@ -249,10 +253,14 @@
     currentAccountId.value = null;
   };
 
+  const isSubmitting = ref(false);
+  const isResettingPassword = ref(false);
+
   const handleSubmit = async () => {
     if (!formRef.value) return;
     await formRef.value.validate(async (valid) => {
       if (valid) {
+        isSubmitting.value = true;
         try {
           if (dialogMode.value === 'create') {
             const payload: CreateAccountPayload = {
@@ -276,6 +284,8 @@
           await getAccountList();
         } catch (error) {
           console.error(error);
+        } finally {
+          isSubmitting.value = false;
         }
       }
     });
@@ -318,6 +328,7 @@
     if (!resetPwdFormRef.value || !currentAccountId.value) return;
     await resetPwdFormRef.value.validate(async (valid) => {
       if (valid) {
+        isResettingPassword.value = true;
         try {
           const payload: ResetPasswordPayload = { password: resetPwdFormData.password };
           await resetPasswordApi(currentAccountId.value!, payload);
@@ -325,6 +336,8 @@
           resetPwdDialogVisible.value = false;
         } catch (error) {
           console.error(error);
+        } finally {
+          isResettingPassword.value = false;
         }
       }
     });
@@ -385,10 +398,9 @@
 
 <style scoped>
   .app-container {
-    padding: 20px;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 90px); /* 减去顶部导航和内边距 */
   }
 
   .card-header {

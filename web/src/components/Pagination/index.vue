@@ -1,16 +1,15 @@
 <template>
-  <div :class="{ hidden: hidden }" class="pagination-container">
-    <el-pagination
-      v-model:current-page="currentPage"
-      v-model:page-size="pageSize"
-      :background="background"
-      :layout="layout"
-      :page-sizes="pageSizes"
-      :total="total"
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-    />
-  </div>
+  <el-pagination
+    v-if="!hidden"
+    v-model:current-page="currentPage"
+    v-model:page-size="pageSize"
+    :background="background"
+    :layout="layout"
+    :page-sizes="pageSizes"
+    :total="total"
+    @size-change="handleSizeChange"
+    @current-change="handleCurrentChange"
+  />
 </template>
 
 <script setup lang="ts">
@@ -75,15 +74,3 @@
     emit('pagination', { page: val, limit: pageSize.value });
   };
 </script>
-
-<style scoped>
-  .pagination-container {
-    background: #fff;
-    padding: 16px 16px;
-    display: flex;
-    justify-content: flex-end;
-  }
-  .pagination-container.hidden {
-    display: none;
-  }
-</style>

@@ -57,3 +57,33 @@ func CanCreateUsers(roleRepo repository.IRoleRepository) gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+const RolePlatformAdmin = "platform_admin"
+
+// PlatformAdminAuth 是一个授权中间件，用于检查当前用户是否为平台管理员
+func PlatformAdminAuth() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		claims, exists := c.Get(ContextUserClaimsKey)
+		if !exists {
+			c.JSON(http.StatusForbidden, gin.H{"error": "无法获取用户信息，禁止访问"})
+			c.Abort()
+			return
+		}
+
+		userClaims, ok := claims.(*jwt.CustomClaims)
+		if !ok || userClaims == nil {
+			c.JSON(http.StatusForbidden, gin.H{"error": "用户信息格式错误，禁止访问"})
+			c.Abort()
+			return
+		}
+
+		// 检查角色是否为平台管理员
+		if userClaims.Role != RolePlatformAdmin {
+			c.JSON(http.StatusForbidden, gin.H{"error": "需要平台管理员权限"})
+			c.Abort()
+			return
+		}
+
+		c.Next()
+	}
+}

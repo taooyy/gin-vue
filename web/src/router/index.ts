@@ -27,11 +27,13 @@ const router = createRouter({
           children: [
             {
               path: 'list', // 对应 /platform/site-management/list
+              name: 'SiteList',
               component: () => import('@/views/platform/SiteList.vue'),
               meta: { title: '站点展示', icon: 'List' },
             },
             {
               path: 'manage', // 对应 /platform/site-management/manage
+              name: 'SiteManage',
               component: () => import('@/views/platform/SiteManage.vue'),
               meta: { title: '站点管理', icon: 'Setting' },
             },

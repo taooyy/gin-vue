@@ -10,6 +10,7 @@ type SysOrganization struct {
 	Name         string    `gorm:"type:varchar(100);not null;comment:组织名称"`
 	OrgType      int8      `gorm:"not null;comment:1:平台 2:学校 3:供应商 4:食堂 5:商户"`
 	ParentID     uint      `gorm:"not null;default:0;comment:父级ID"`
+	AdminUserID  uint      `gorm:"comment:管理员用户ID"`
 	ContactName  string    `gorm:"type:varchar(50);comment:负责人"`
 	ContactPhone string    `gorm:"type:varchar(20);comment:电话"`
 	Address      string    `gorm:"type:varchar(255);comment:地址"`

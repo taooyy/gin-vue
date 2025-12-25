@@ -61,6 +61,16 @@ func (r *userRepository) GetUserByID(id uint) (*model.SysUser, error) {
 	return &user, err
 }
 
+// FindUsersByIDs 根据一组ID批量获取用户
+func (r *userRepository) FindUsersByIDs(ids []uint) ([]model.SysUser, error) {
+	var users []model.SysUser
+	if len(ids) == 0 {
+		return users, nil
+	}
+	err := r.db.Where("id IN ?", ids).Find(&users).Error
+	return users, err
+}
+
 // UpdateUser 更新用户信息
 func (r *userRepository) UpdateUser(user *model.SysUser) error {
 	return r.db.Save(user).Error
